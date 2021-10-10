@@ -1,3 +1,3 @@
 # Indian Ticker
 
-CLI Tool for gettind data of Indian Stocks and Mutual Funds
+CLI Tool for getting data of Indian Stocks and Mutual Funds

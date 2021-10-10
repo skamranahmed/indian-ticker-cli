@@ -9,7 +9,7 @@ setuptools.setup(
     keyword="indian stocks, mututal funds, indian ticker",
     author="Syed Kamran Ahmed",
     author_email="syedkamranahmed14@gmail.com",
-    description="CLI tool for getting data of Indian Stocks and Mutual Funds",
+    description="CLI tool to get data of Indian Stocks and Mutual Funds",
     long_description=long_description,      
     long_description_content_type="text/markdown",
     url="https://github.com/skamranahmed/indian-stocks-cli",
