@@ -5,13 +5,13 @@ with open("readme.md", "r") as fh:
 
 setuptools.setup(
     name="ind-ticker",
-    version="0.0.1",
+    version="0.0.2",
     author="Syed Kamran Ahmed",
     author_email="syedkamranahmed14@gmail.com",
     description="CLI tool to get data of Indian Stocks and Mutual Funds",
     long_description=long_description,      
     long_description_content_type="text/markdown",
-    url="https://github.com/skamranahmed/indian-stocks-cli",
+    url="https://github.com/skamranahmed/indian-ticker-cli",
     packages=setuptools.find_packages(),    
     install_requires=[
         "click",
