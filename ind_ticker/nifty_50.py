@@ -1,7 +1,8 @@
 import requests
 from prettytable import PrettyTable
 from termcolor import colored
-from values import TICKERTAPE_SCREENER_QUERY_URL, NITFY_50_PAYLOAD, HEADERS
+
+from ind_ticker.values import TICKERTAPE_SCREENER_QUERY_URL, NITFY_50_PAYLOAD, HEADERS
 
 def get_nifty_50_data():
     # TODO: dynamically fetch NIFTY_50_PAYLOAD

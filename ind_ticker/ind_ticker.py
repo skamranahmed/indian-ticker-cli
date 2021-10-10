@@ -1,6 +1,7 @@
 import click
 from termcolor import colored
-from nifty_50 import get_nifty_50_data
+
+from ind_ticker.nifty_50 import get_nifty_50_data
 
 version = "0.0.4"
 
@@ -14,7 +15,7 @@ def main():
 @click.option("--nifty50")
 def nifty_50(nifty50):
     """
-        Usage: python main.py nifty-50
+        Usage: ind-ticker nifty-50
     """
     print()
     print(f"{colored('Nifty 50', 'red')}".center(110))
