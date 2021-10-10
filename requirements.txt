@@ -1,4 +1,4 @@
-click
-prettytable
-requests
-termcolor
+click==7.1.2
+prettytable==2.1.0
+requests==2.25.1
+termcolor==1.1.0
