@@ -1,6 +1,6 @@
 import click
 
-version = '0.0.3'
+version = "0.0.4"
 
 @click.group()
 def main():
