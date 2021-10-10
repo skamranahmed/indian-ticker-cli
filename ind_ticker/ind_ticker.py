@@ -1,5 +1,7 @@
 import click
 
+version = '0.0.3'
+
 @click.group()
 def main():
     """A CLI Tool to get data of Indian Stocks and Mutual Funds"""
