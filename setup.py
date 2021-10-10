@@ -6,7 +6,6 @@ with open("readme.md", "r") as fh:
 setuptools.setup(
     name="ind-ticker",
     version="0.0.1",
-    keyword="indian stocks, mututal funds, indian ticker",
     author="Syed Kamran Ahmed",
     author_email="syedkamranahmed14@gmail.com",
     description="CLI tool to get data of Indian Stocks and Mutual Funds",
@@ -29,6 +28,6 @@ setuptools.setup(
     license="MIT",
     entry_points="""
         [console_scripts]
-        ind-ticker=ind-ticker.__main__:main
+        ind-ticker=ind_ticker.__main__:main
     """
 )
