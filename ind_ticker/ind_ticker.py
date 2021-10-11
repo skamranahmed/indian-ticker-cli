@@ -2,6 +2,7 @@ import click
 from termcolor import colored
 
 from ind_ticker.nifty_50 import get_nifty_50_data
+from ind_ticker.stocks import get_stock_data_table
 
 version = "0.0.4"
 
@@ -22,6 +23,20 @@ def nifty_50(nifty50):
     nifty_50_table = get_nifty_50_data()
     if nifty_50_table is not None:
         print(nifty_50_table)
+    return
+
+#  get stock data of a single company
+@main.command()
+@click.argument("stock_name", nargs = 1)
+def stock(stock_name):
+    """
+    Usage: ind-ticker stock <stock_name_without_spaces>
+    Example: ind-ticker stock State-Bank-Of-India
+    """
+    print(f"Getting stock data of {stock_name}!")
+    stock_data_table = get_stock_data_table(stock_name)
+    if stock_data_table is not None:
+        print(stock_data_table)
     return
 
 if __name__ == "__main__":
