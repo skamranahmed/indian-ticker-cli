@@ -3,6 +3,9 @@ import requests
 from prettytable import PrettyTable
 from termcolor import colored
 
+from datetime import date
+
+
 from ind_ticker.values import TICKERTAPE_STOCK_SEARCH_URL, TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL
 
 def get_stock_data_for_duration_of_one_day(stock_name):
@@ -95,6 +98,14 @@ def get_stock_data_by_duration(stock_sid, duration):
         investment_duration = colored("5 Years", "white")
         duration_count = "5 years ago"
 
+    elif duration == "max":
+        todays_date = date.today()
+        ipo_data = stock_data["points"][0]["ts"].split("-")
+        ipo_year = int(ipo_data[0])
+        year_count = todays_date.year - ipo_year
+        investment_duration = colored(f"{year_count} Years", "white")
+        duration_count = f"{year_count} years ago"
+
     investment_fact = f"INR {principal_amount:,} invested {duration_count} would have become INR {new_amount:,} today"
     
     data = [
@@ -139,6 +150,9 @@ def get_stock_data_table(stock_name):
     row_list.append(row_data)
 
     row_data = get_stock_data_by_duration(stock_sid = stock_id, duration = "5y")
+    row_list.append(row_data)
+
+    row_data = get_stock_data_by_duration(stock_sid = stock_id, duration = "max")
     row_list.append(row_data)
 
     full_stock_name = click.style(full_stock_name, fg = 'red', bold = True)
