@@ -24,5 +24,17 @@ def nifty_50(nifty50):
         print(nifty_50_table)
     return
 
+#  get stock data of a single company
+@main.command()
+@click.argument("stock_name", nargs = 1)
+def stock(stock_name):
+    """
+    Usage: ind-ticker stock <stock_name_without_spaces>
+    Example: ind-ticker stock State-Bank-Of-India
+    """
+
+    print(f"Getting stock data of {stock_name}!")
+    return
+
 if __name__ == "__main__":
     main()
