@@ -140,6 +140,12 @@ def get_stock_data_table(stock_name):
         print(f"No data found for stock ticker name '{stock_ticker_name}'")
         return None
 
+    full_stock_name = click.style(full_stock_name, fg = 'red', bold = True)
+    stock_sector = click.style(f"Sector - {sector}", fg = 'yellow', bold = True)
+    print()
+    print(f"{full_stock_name}".center(170))
+    print(f"{stock_sector}".center(170))
+
     row_list.append(row_data)
 
     row_data = get_stock_data_by_duration(stock_sid = stock_id, duration = "1w")
@@ -157,11 +163,6 @@ def get_stock_data_table(stock_name):
     row_data = get_stock_data_by_duration(stock_sid = stock_id, duration = "max")
     row_list.append(row_data)
 
-    full_stock_name = click.style(full_stock_name, fg = 'red', bold = True)
-    stock_sector = click.style(f"Sector - {sector}", fg = 'yellow', bold = True)
-    print()
-    print(f"{full_stock_name}".center(170))
-    print(f"{stock_sector}".center(170))
     for row in row_list:
         myTable.add_row(row)
         myTable.add_row(['', '', '', '', '', '', ''])
