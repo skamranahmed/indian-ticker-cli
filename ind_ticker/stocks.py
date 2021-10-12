@@ -5,12 +5,14 @@ from termcolor import colored
 
 from datetime import date
 
-
 from ind_ticker.values import TICKERTAPE_STOCK_SEARCH_URL, TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL
+
+# create a request session object for faster results while making http requests
+s = requests.Session()
 
 def get_stock_data_for_duration_of_one_day(stock_name):
     duration = colored("1 Day", 'white')
-    response = requests.get(TICKERTAPE_STOCK_SEARCH_URL % (stock_name))
+    response = s.get(TICKERTAPE_STOCK_SEARCH_URL % (stock_name))
     json_data = response.json()
 
     try:
@@ -61,7 +63,7 @@ def get_stock_data_for_duration_of_one_day(stock_name):
 
 
 def get_stock_data_by_duration(stock_sid, duration):
-    response = requests.get(TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL % (stock_sid, duration))
+    response = s.get(TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL % (stock_sid, duration))
     json_data = response.json()
 
     stock_data = json_data["data"][0]
