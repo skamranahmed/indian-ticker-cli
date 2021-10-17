@@ -253,24 +253,33 @@ def get_financial_ratios(stock_id):
         return None, None, None, None, None
 
     for yearly_bs_data, yearly_income_data in zip(last_four_year_balance_sheet_data, last_four_year_annual_normal_data):
-        long_term_debt = round(yearly_bs_data["balTltd"], 2)
+        total_long_term_debt = yearly_bs_data["balTltd"]
+        total_equity = yearly_bs_data["balTeq"]
+        net_income = yearly_income_data["incNinc"]
+        pbit = yearly_income_data["incPbi"]
+        total_assets = yearly_bs_data["balTota"]
+        current_liabilities = yearly_bs_data["balTcl"]
+        accounts_payable = yearly_bs_data["balAccp"]
+        total_current_assets = yearly_bs_data["balTca"]
+
+        long_term_debt = round(total_long_term_debt, 2)
 
         # return_on_equity = (net_income / total_equity) * 100
-        roe = round((yearly_income_data["incNinc"]/yearly_bs_data["balTeq"])*100, 2)
+        roe = round((net_income/total_equity)*100, 2)
         
         # return_on_captial_employed = ( (PBIT) / (total_assets - current_liabilities) ) * 100 
-        roce = round(yearly_income_data["incPbi"]/(yearly_bs_data["balTota"]-yearly_bs_data["balTcl"])*100, 2)
+        roce = round(pbit/(total_assets-current_liabilities)*100, 2)
 
         # debt_to_equity_ratio = ( (accounts_payable + total_long_term_debt) / total_equity )
-        debt_to_equity_ratio = round((yearly_bs_data["balAccp"] + yearly_bs_data["balTltd"])/yearly_bs_data["balTeq"], 2)
+        debt_to_equity_ratio = round((accounts_payable + total_long_term_debt)/total_equity, 2)
 
         if debt_to_equity_ratio > 2 or debt_to_equity_ratio < 0:
             debt_to_equity_ratio = colored(debt_to_equity_ratio, "red")
         else:
             debt_to_equity_ratio = colored(debt_to_equity_ratio, "green")
 
-
-        current_ratio = round(yearly_bs_data["balTca"]/yearly_bs_data["balTcl"], 2) #  total_current_assets/total_current_liabilities
+        #  current_ratio = total_current_assets/total_current_liabilities
+        current_ratio = round(total_current_assets/current_liabilities, 2) 
         debt_to_equity_ratio_data.append(debt_to_equity_ratio)
         current_ratio_data.append(current_ratio)
         roe_data.append(roe)
