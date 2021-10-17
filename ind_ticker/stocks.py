@@ -302,27 +302,35 @@ def get_quarterly_growth_stock_data(stock_name):
         print(f"Quarter analysis data not found for stock name '{stock_ticker_name}'")
         return None
 
-    eps_growth_data = [colored("EPS Growth (%)", "yellow")]
+    total_revenue_growth_data = [colored("Total Revenue Growth (%)", "yellow")]
     net_income_growth_data = [colored("Net Income Growth (%)", "yellow")]
+    eps_growth_data = [colored("EPS Growth (%)", "yellow")]
     quarter_name = []
 
     for quarter_data in last_four_quarters_data:
-        eps = round(quarter_data["qIncEps"], 2)
+        total_revenue = round(quarter_data["qIncTrev"], 2)
         net_income = round(quarter_data["qIncNinc"], 2)
+        eps = round(quarter_data["qIncEps"], 2)
         quarter_period = quarter_data["displayPeriod"].replace(" ", "")
+
+        if total_revenue < 0:
+            total_revenue = colored(total_revenue, 'red')
+        else:
+            total_revenue = colored(total_revenue, 'green')
+            
+        if net_income < 0:
+            net_income = colored(net_income, 'red')
+        else:
+            net_income = colored(net_income, 'green')
 
         if eps < 0:
             eps = colored(eps, 'red')
         else:
             eps = colored(eps, 'green')
 
-        if net_income < 0:
-            net_income = colored(net_income, 'red')
-        else:
-            net_income = colored(net_income, 'green')
-
-        eps_growth_data.append(eps)
+        total_revenue_growth_data.append(total_revenue)
         net_income_growth_data.append(net_income)
+        eps_growth_data.append(eps)
         quarter_name.append(quarter_period)
 
     row_list = []
@@ -334,8 +342,9 @@ def get_quarterly_growth_stock_data(stock_name):
     myTable = PrettyTable(
         [quarter_header, q_name_1, q_name_2, q_name_3, q_name_4])
 
-    row_list.append(eps_growth_data)
+    row_list.append(total_revenue_growth_data)
     row_list.append(net_income_growth_data)
+    row_list.append(eps_growth_data)
 
     for row in row_list:
         myTable.add_row(row)
