@@ -240,8 +240,8 @@ def get_financial_ratios(stock_id):
 
     debt_to_equity_ratio_data = [colored("Debt/Equity Ratio", "yellow")]
     current_ratio_data = [colored("Current Ratio", "yellow")]
-    roe_data = [colored("RoE (%)", "yellow")]
-    roce_data = [colored("RoCE (%)", "yellow")]
+    roe_data = [colored("ROE (%)", "yellow")]
+    roce_data = [colored("ROCE (%)", "yellow")]
     long_term_debt_data = [colored("Long Term Debt (in Cr)", "yellow")]
 
     annual_normal_response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL % (stock_id))
@@ -254,8 +254,14 @@ def get_financial_ratios(stock_id):
 
     for yearly_bs_data, yearly_income_data in zip(last_four_year_balance_sheet_data, last_four_year_annual_normal_data):
         long_term_debt = round(yearly_bs_data["balTltd"], 2)
+
+        # return_on_equity = (net_income / total_equity) * 100
         roe = round((yearly_income_data["incNinc"]/yearly_bs_data["balTeq"])*100, 2)
+        
+        # return_on_captial_employed = ( (PBIT) / (total_assets - current_liabilities) ) * 100 
         roce = round(yearly_income_data["incPbi"]/(yearly_bs_data["balTota"]-yearly_bs_data["balTcl"])*100, 2)
+
+        # debt_to_equity_ratio = ( (accounts_payable + total_long_term_debt) / total_equity )
         debt_to_equity_ratio = round((yearly_bs_data["balAccp"] + yearly_bs_data["balTltd"])/yearly_bs_data["balTeq"], 2)
 
         if debt_to_equity_ratio > 2 or debt_to_equity_ratio < 0:
