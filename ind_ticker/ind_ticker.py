@@ -47,8 +47,6 @@ def stock(stock_name, annualanalysis):
             print()
             print(f"{annual_analysis}".center(90))
             print(annual_analysis_table)
-        else:
-            print(f"Annual analysis for {stock_name} not found")
         
     return
 

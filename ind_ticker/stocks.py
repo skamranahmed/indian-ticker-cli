@@ -143,7 +143,7 @@ def get_stock_data_table(stock_name):
     stock_id, full_stock_name, sector, row_data = get_stock_data_for_duration_of_one_day(stock_name = stock_name)
     if stock_id is None:
         stock_ticker_name = colored(stock_name, 'red')
-        print(f"No data found for stock ticker name '{stock_ticker_name}'")
+        print(f"No data found for stock name '{stock_ticker_name}'")
         return None
     row_list.append(row_data)
 
@@ -169,7 +169,14 @@ def get_annual_growth_stock_data(stock_name):
     stock_id, full_stock_name, sector, row_data = get_stock_data_for_duration_of_one_day(stock_name = stock_name)
     response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL % (stock_id))
     json_data = response.json()
-    last_four_year_annual_data = json_data["data"][-4:]
+
+    try:
+        last_four_year_annual_data = json_data["data"][-4:]
+    except:
+        stock_ticker_name = colored(stock_name, 'red')
+        print(f"No data found for stock name '{stock_ticker_name}'")
+        return None
+
     eps_growth_data = [colored("EPS Growth (%)", "yellow")]
     net_income_growth_data = [colored("Net Income Growth (%)", "yellow")]
     financial_year_name = []
