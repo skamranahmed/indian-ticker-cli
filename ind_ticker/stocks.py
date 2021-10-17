@@ -9,7 +9,8 @@ from ind_ticker.values import (
     TICKERTAPE_STOCK_SEARCH_URL, 
     TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL, 
     TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL,
-    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL
+    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL,
+    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL
 )
 
 # create a request session object for faster results while making http requests
@@ -26,7 +27,7 @@ def get_stock_data_for_duration_of_one_day(stock_name):
         total_stocks_found = 0
 
     if total_stocks_found == 0:
-        return None, None, None
+        return None, None, None, None
 
     try:
         stock_data = json_data["data"]["stocks"][0]
@@ -64,7 +65,7 @@ def get_stock_data_for_duration_of_one_day(stock_name):
 
         return sid, full_stock_name, sector, data
     except:
-        return None, None, None
+        return None, None, None, None
 
 
 def get_stock_data_by_duration(stock_sid, duration):
@@ -226,7 +227,7 @@ def get_financial_ratios(stock_id):
     roce_data = [colored("RoCE (%)", "yellow")]
     long_term_debt_data = [colored("Long Term Debt (in Cr)", "yellow")]
 
-    annual_normal_response = requests.get(f"https://api.tickertape.in/stocks/financials/income/{stock_id}/annual/normal?count=10")
+    annual_normal_response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL % (stock_id))
     annual_normal_json_data = annual_normal_response.json()
     last_four_year_annual_normal_data = annual_normal_json_data["data"][-4:]
 
