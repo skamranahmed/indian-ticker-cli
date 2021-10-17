@@ -174,7 +174,7 @@ def get_annual_growth_stock_data(stock_name):
         last_four_year_annual_data = json_data["data"][-4:]
     except:
         stock_ticker_name = colored(stock_name, 'red')
-        print(f"No data found for stock name '{stock_ticker_name}'")
+        print(f"Annual analysis data not found for stock name '{stock_ticker_name}'")
         return None
 
     eps_growth_data = [colored("EPS Growth (%)", "yellow")]
@@ -201,6 +201,12 @@ def get_annual_growth_stock_data(stock_name):
         financial_year_name.append(financial_year_period)
 
     debt_to_equity_ratio_data, current_ratio_data, long_term_debt_data, roe_data, roce_data = get_financial_ratios(stock_id)
+
+    if debt_to_equity_ratio_data is None:
+        stock_ticker_name = colored(stock_name, 'red')
+        print(f"Annual analysis data not found for stock name '{stock_ticker_name}'")
+        return None
+
     row_list = []
     financial_year_header = colored("Financial Year", 'cyan')
     fy_1 = colored(financial_year_name[0], 'cyan')
@@ -226,7 +232,11 @@ def get_annual_growth_stock_data(stock_name):
 def get_financial_ratios(stock_id):
     balance_sheet_response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL % (stock_id))
     json_data = balance_sheet_response.json()
-    last_four_year_balance_sheet_data = json_data["data"][-4:]
+
+    try:
+        last_four_year_balance_sheet_data = json_data["data"][-4:]
+    except:
+        return None, None, None, None, None
 
     debt_to_equity_ratio_data = [colored("Debt/Equity Ratio", "yellow")]
     current_ratio_data = [colored("Current Ratio", "yellow")]
@@ -236,7 +246,11 @@ def get_financial_ratios(stock_id):
 
     annual_normal_response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL % (stock_id))
     annual_normal_json_data = annual_normal_response.json()
-    last_four_year_annual_normal_data = annual_normal_json_data["data"][-4:]
+
+    try:
+        last_four_year_annual_normal_data = annual_normal_json_data["data"][-4:]
+    except:
+        return None, None, None, None, None
 
     for yearly_bs_data, yearly_income_data in zip(last_four_year_balance_sheet_data, last_four_year_annual_normal_data):
         long_term_debt = round(yearly_bs_data["balTltd"], 2)

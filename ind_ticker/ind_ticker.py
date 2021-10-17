@@ -40,7 +40,7 @@ def stock(stock_name, annualanalysis):
         print(stock_data_table)
 
     if annualanalysis:
-        print(f"Getting annual analysis data {stock_name}!")
+        print(f"Getting annual analysis data of {stock_name}!")
         annual_analysis_table = get_annual_growth_stock_data(stock_name)
         if annual_analysis_table is not None:
             annual_analysis = click.style("Annual Analysis", fg='red', bold=True)
