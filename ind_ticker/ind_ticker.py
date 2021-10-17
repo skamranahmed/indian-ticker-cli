@@ -2,7 +2,12 @@ import click
 from termcolor import colored
 
 from ind_ticker.nifty_50 import get_nifty_50_data
-from ind_ticker.stocks import get_stock_data_table, get_annual_growth_stock_data
+from ind_ticker.stocks import (
+    get_stock_data_table,
+    get_stock_data_table_for_list_of_stocks,
+    get_annual_growth_stock_data,
+    get_quarterly_growth_stock_data
+)
 
 version = "0.0.4"
 
@@ -29,7 +34,8 @@ def nifty_50(nifty50):
 @main.command()
 @click.argument("stock_name", nargs = 1)
 @click.option("--annualanalysis", "-aa", is_flag = True, type = bool)
-def stock(stock_name, annualanalysis):
+@click.option("--quarteranalysis", "-qa", is_flag = True, type = bool)
+def stock(stock_name, annualanalysis, quarteranalysis):
     """
     Usage: ind-ticker stock <stock_name_without_spaces>
     Example: ind-ticker stock State-Bank-Of-India
@@ -51,7 +57,29 @@ def stock(stock_name, annualanalysis):
             print()
             print(f"{annual_analysis}".center(90))
             print(annual_analysis_table)
+
+    if quarteranalysis:
+        print(f"Getting quarterly analysis data of {stock_name}!")
+        quarter_analysis_table = get_quarterly_growth_stock_data(stock_name)
+        if quarter_analysis_table is not None:
+            quarterly_analysis = click.style("Quarterly Analysis", fg='red', bold=True)
+            print()
+            print(f"{quarterly_analysis}".center(90))
+            print(quarter_analysis_table)
         
+    return
+
+#  get stock data of multiple companies
+@main.command()
+@click.argument("stock_names", nargs = -1)
+def stocks(stock_names):
+    """
+        Usage: ind-ticker stocks tickers <stock_name_1_without_spaces> <stock_name_2_without_spaces> ......
+        Example: ind-ticker stocks Airtel Reliance MRF
+    """
+    stock_names = list(stock_names)
+    print(f"Getting stock data of {stock_names}!")
+    get_stock_data_table_for_list_of_stocks(stock_names)
     return
 
 if __name__ == "__main__":
