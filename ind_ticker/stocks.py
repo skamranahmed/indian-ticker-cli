@@ -68,7 +68,6 @@ def get_stock_data_for_duration_of_one_day(stock_name):
     except:
         return None, None, None, None
 
-
 def get_stock_data_by_duration(stock_sid, duration):
     response = s.get(TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL % (stock_sid, duration))
     json_data = response.json()
@@ -288,7 +287,6 @@ def get_financial_ratios(stock_id):
         long_term_debt_data.append(long_term_debt)
 
     return debt_to_equity_ratio_data, current_ratio_data, long_term_debt_data, roe_data, roce_data
-
 
 def get_quarterly_growth_stock_data(stock_name):
     stock_id, full_stock_name, sector, row_data = get_stock_data_for_duration_of_one_day(stock_name = stock_name)
