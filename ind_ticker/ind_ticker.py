@@ -36,7 +36,11 @@ def stock(stock_name, annualanalysis):
     """
     print(f"Getting stock data of {stock_name}!")
     stock_data_table = get_stock_data_table(stock_name)
-    if stock_data_table is not None:
+
+    if stock_data_table is None:
+        # if no data is found for the given stock, then no need to perform any other operations
+        return
+    else:
         print(stock_data_table)
 
     if annualanalysis:
