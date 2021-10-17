@@ -2,7 +2,7 @@ import click
 from termcolor import colored
 
 from ind_ticker.nifty_50 import get_nifty_50_data
-from ind_ticker.stocks import get_stock_data_table
+from ind_ticker.stocks import get_stock_data_table, get_annual_growth_stock_data
 
 version = "0.0.4"
 
@@ -28,7 +28,8 @@ def nifty_50(nifty50):
 #  get stock data of a single company
 @main.command()
 @click.argument("stock_name", nargs = 1)
-def stock(stock_name):
+@click.option("--annualanalysis", "-aa", is_flag = True, type = bool)
+def stock(stock_name, annualanalysis):
     """
     Usage: ind-ticker stock <stock_name_without_spaces>
     Example: ind-ticker stock State-Bank-Of-India
@@ -37,6 +38,16 @@ def stock(stock_name):
     stock_data_table = get_stock_data_table(stock_name)
     if stock_data_table is not None:
         print(stock_data_table)
+
+    if annualanalysis:
+        print(f"Getting annual analysis data of {stock_name}!")
+        annual_analysis_table = get_annual_growth_stock_data(stock_name)
+        if annual_analysis_table is not None:
+            annual_analysis = click.style("Annual Analysis", fg='red', bold=True)
+            print()
+            print(f"{annual_analysis}".center(90))
+            print(annual_analysis_table)
+        
     return
 
 if __name__ == "__main__":

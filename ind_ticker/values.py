@@ -7,3 +7,9 @@ TICKERTAPE_SCREENER_QUERY_URL = 'https://api.tickertape.in/screener/query'
 TICKERTAPE_STOCK_SEARCH_URL = 'https://api.tickertape.in/search?text=%s&types=stock'
 
 TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL = 'https://api.tickertape.in/stocks/charts/inter/%s?duration=%s'
+
+TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL = 'https://api.tickertape.in/stocks/financials/income/%s/annual/growth?count=10'
+
+TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL = 'https://api.tickertape.in/stocks/financials/income/%s/annual/normal?count=10'
+
+TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL = 'https://api.tickertape.in/stocks/financials/balancesheet/%s/annual/normal?count=10'

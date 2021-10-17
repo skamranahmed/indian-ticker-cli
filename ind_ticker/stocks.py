@@ -5,7 +5,13 @@ from termcolor import colored
 
 from datetime import date
 
-from ind_ticker.values import TICKERTAPE_STOCK_SEARCH_URL, TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL
+from ind_ticker.values import (
+    TICKERTAPE_STOCK_SEARCH_URL, 
+    TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL, 
+    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL,
+    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL,
+    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL
+)
 
 # create a request session object for faster results while making http requests
 s = requests.Session()
@@ -21,7 +27,7 @@ def get_stock_data_for_duration_of_one_day(stock_name):
         total_stocks_found = 0
 
     if total_stocks_found == 0:
-        return None, None, None
+        return None, None, None, None
 
     try:
         stock_data = json_data["data"]["stocks"][0]
@@ -59,7 +65,7 @@ def get_stock_data_for_duration_of_one_day(stock_name):
 
         return sid, full_stock_name, sector, data
     except:
-        return None, None, None
+        return None, None, None, None
 
 
 def get_stock_data_by_duration(stock_sid, duration):
@@ -137,7 +143,7 @@ def get_stock_data_table(stock_name):
     stock_id, full_stock_name, sector, row_data = get_stock_data_for_duration_of_one_day(stock_name = stock_name)
     if stock_id is None:
         stock_ticker_name = colored(stock_name, 'red')
-        print(f"No data found for stock ticker name '{stock_ticker_name}'")
+        print(f"No data found for stock name '{stock_ticker_name}'")
         return None
     row_list.append(row_data)
 
@@ -158,3 +164,126 @@ def get_stock_data_table(stock_name):
         myTable.add_row(['', '', '', '', '', '', ''])
 
     return myTable
+
+def get_annual_growth_stock_data(stock_name):
+    stock_id, full_stock_name, sector, row_data = get_stock_data_for_duration_of_one_day(stock_name = stock_name)
+    response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL % (stock_id))
+    json_data = response.json()
+
+    try:
+        last_four_year_annual_data = json_data["data"][-4:]
+    except:
+        stock_ticker_name = colored(stock_name, 'red')
+        print(f"Annual analysis data not found for stock name '{stock_ticker_name}'")
+        return None
+
+    eps_growth_data = [colored("EPS Growth (%)", "yellow")]
+    net_income_growth_data = [colored("Net Income Growth (%)", "yellow")]
+    financial_year_name = []
+
+    for year_data in last_four_year_annual_data:
+        eps = round(year_data["incEps"], 2)
+        net_income = round(year_data["incNinc"], 2)
+        financial_year_period = year_data["displayPeriod"].replace(" ", "").replace("FY'", "20")
+
+        if eps < 0:
+            eps = colored(eps, 'red')
+        else:
+            eps = colored(eps, 'green')
+
+        if net_income < 0:
+            net_income = colored(net_income, 'red')
+        else:
+            net_income = colored(net_income, 'green')
+
+        eps_growth_data.append(eps)
+        net_income_growth_data.append(net_income)
+        financial_year_name.append(financial_year_period)
+
+    debt_to_equity_ratio_data, current_ratio_data, long_term_debt_data, roe_data, roce_data = get_financial_ratios(stock_id)
+
+    if debt_to_equity_ratio_data is None:
+        stock_ticker_name = colored(stock_name, 'red')
+        print(f"Annual analysis data not found for stock name '{stock_ticker_name}'")
+        return None
+
+    row_list = []
+    financial_year_header = colored("Financial Year", 'cyan')
+    fy_1 = colored(financial_year_name[0], 'cyan')
+    fy_2 = colored(financial_year_name[1], 'cyan')
+    fy_3 = colored(financial_year_name[2], 'cyan')
+    fy_4 = colored(financial_year_name[3], 'cyan')
+    myTable = PrettyTable(
+        [financial_year_header, fy_1, fy_2, fy_3, fy_4])
+
+    row_list.append(eps_growth_data)
+    row_list.append(net_income_growth_data)
+    row_list.append(debt_to_equity_ratio_data)
+    row_list.append(current_ratio_data)
+    row_list.append(long_term_debt_data)
+    row_list.append(roe_data)
+    row_list.append(roce_data)
+
+    for row in row_list:
+        myTable.add_row(row)
+        myTable.add_row(['', '', '', '', ''])
+    return myTable
+
+def get_financial_ratios(stock_id):
+    balance_sheet_response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL % (stock_id))
+    json_data = balance_sheet_response.json()
+
+    try:
+        last_four_year_balance_sheet_data = json_data["data"][-4:]
+    except:
+        return None, None, None, None, None
+
+    debt_to_equity_ratio_data = [colored("Debt/Equity Ratio", "yellow")]
+    current_ratio_data = [colored("Current Ratio", "yellow")]
+    roe_data = [colored("ROE (%)", "yellow")]
+    roce_data = [colored("ROCE (%)", "yellow")]
+    long_term_debt_data = [colored("Long Term Debt (in Cr)", "yellow")]
+
+    annual_normal_response = s.get(TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL % (stock_id))
+    annual_normal_json_data = annual_normal_response.json()
+
+    try:
+        last_four_year_annual_normal_data = annual_normal_json_data["data"][-4:]
+    except:
+        return None, None, None, None, None
+
+    for yearly_bs_data, yearly_income_data in zip(last_four_year_balance_sheet_data, last_four_year_annual_normal_data):
+        total_long_term_debt = yearly_bs_data["balTltd"]
+        total_equity = yearly_bs_data["balTeq"]
+        net_income = yearly_income_data["incNinc"]
+        pbit = yearly_income_data["incPbi"]
+        total_assets = yearly_bs_data["balTota"]
+        current_liabilities = yearly_bs_data["balTcl"]
+        accounts_payable = yearly_bs_data["balAccp"]
+        total_current_assets = yearly_bs_data["balTca"]
+
+        long_term_debt = round(total_long_term_debt, 2)
+
+        # return_on_equity = (net_income / total_equity) * 100
+        roe = round((net_income/total_equity)*100, 2)
+        
+        # return_on_captial_employed = ( (PBIT) / (total_assets - current_liabilities) ) * 100 
+        roce = round(pbit/(total_assets-current_liabilities)*100, 2)
+
+        # debt_to_equity_ratio = ( (accounts_payable + total_long_term_debt) / total_equity )
+        debt_to_equity_ratio = round((accounts_payable + total_long_term_debt)/total_equity, 2)
+
+        if debt_to_equity_ratio > 2 or debt_to_equity_ratio < 0:
+            debt_to_equity_ratio = colored(debt_to_equity_ratio, "red")
+        else:
+            debt_to_equity_ratio = colored(debt_to_equity_ratio, "green")
+
+        #  current_ratio = total_current_assets/total_current_liabilities
+        current_ratio = round(total_current_assets/current_liabilities, 2) 
+        debt_to_equity_ratio_data.append(debt_to_equity_ratio)
+        current_ratio_data.append(current_ratio)
+        roe_data.append(roe)
+        roce_data.append(roce)
+        long_term_debt_data.append(long_term_debt)
+
+    return debt_to_equity_ratio_data, current_ratio_data, long_term_debt_data, roe_data, roce_data
