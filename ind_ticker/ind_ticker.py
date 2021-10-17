@@ -4,6 +4,7 @@ from termcolor import colored
 from ind_ticker.nifty_50 import get_nifty_50_data
 from ind_ticker.stocks import (
     get_stock_data_table,
+    get_stock_data_table_for_list_of_stocks,
     get_annual_growth_stock_data,
     get_quarterly_growth_stock_data
 )
@@ -66,6 +67,19 @@ def stock(stock_name, annualanalysis, quarteranalysis):
             print(f"{quarterly_analysis}".center(90))
             print(quarter_analysis_table)
         
+    return
+
+#  get stock data of multiple companies
+@main.command()
+@click.argument("stock_names", nargs = -1)
+def stocks(stock_names):
+    """
+        Usage: ind-ticker stocks tickers <stock_name_1_without_spaces> <stock_name_2_without_spaces> ......
+        Example: ind-ticker stocks Airtel Reliance MRF
+    """
+    stock_names = list(stock_names)
+    print(f"Getting stock data of {stock_names}!")
+    get_stock_data_table_for_list_of_stocks(stock_names)
     return
 
 if __name__ == "__main__":

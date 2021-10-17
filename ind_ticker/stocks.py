@@ -349,3 +349,9 @@ def get_quarterly_growth_stock_data(stock_name):
         myTable.add_row(['', '', '', '', ''])
 
     return myTable
+
+def get_stock_data_table_for_list_of_stocks(stock_names):
+    for stock_name in stock_names:
+        stock_data_table = get_stock_data_table(stock_name)
+        if stock_data_table is not None:
+            print(stock_data_table)
