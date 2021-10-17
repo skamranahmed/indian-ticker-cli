@@ -10,7 +10,8 @@ from ind_ticker.values import (
     TICKERTAPE_STOCK_SERIES_DATA_SEARCH_URL, 
     TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL,
     TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL,
-    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL
+    TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL,
+    TICKERTAPE_STOCK_QUARTER_ANALYSIS_DATA_URL
 )
 
 # create a request session object for faster results while making http requests
@@ -287,3 +288,57 @@ def get_financial_ratios(stock_id):
         long_term_debt_data.append(long_term_debt)
 
     return debt_to_equity_ratio_data, current_ratio_data, long_term_debt_data, roe_data, roce_data
+
+
+def get_quarterly_growth_stock_data(stock_name):
+    stock_id, full_stock_name, sector, row_data = get_stock_data_for_duration_of_one_day(stock_name = stock_name)
+    response = s.get(TICKERTAPE_STOCK_QUARTER_ANALYSIS_DATA_URL % (stock_id))
+    json_data = response.json()
+
+    try:
+        last_four_quarters_data = json_data["data"][-4:]
+    except:
+        stock_ticker_name = colored(stock_name, 'red')
+        print(f"Quarter analysis data not found for stock name '{stock_ticker_name}'")
+        return None
+
+    eps_growth_data = [colored("EPS Growth (%)", "yellow")]
+    net_income_growth_data = [colored("Net Income Growth (%)", "yellow")]
+    quarter_name = []
+
+    for quarter_data in last_four_quarters_data:
+        eps = round(quarter_data["qIncEps"], 2)
+        net_income = round(quarter_data["qIncNinc"], 2)
+        quarter_period = quarter_data["displayPeriod"].replace(" ", "")
+
+        if eps < 0:
+            eps = colored(eps, 'red')
+        else:
+            eps = colored(eps, 'green')
+
+        if net_income < 0:
+            net_income = colored(net_income, 'red')
+        else:
+            net_income = colored(net_income, 'green')
+
+        eps_growth_data.append(eps)
+        net_income_growth_data.append(net_income)
+        quarter_name.append(quarter_period)
+
+    row_list = []
+    quarter_header = colored("Quarter", 'cyan')
+    q_name_1 = colored(quarter_name[0], 'cyan')
+    q_name_2 = colored(quarter_name[1], 'cyan')
+    q_name_3 = colored(quarter_name[2], 'cyan')
+    q_name_4 = colored(quarter_name[3], 'cyan')
+    myTable = PrettyTable(
+        [quarter_header, q_name_1, q_name_2, q_name_3, q_name_4])
+
+    row_list.append(eps_growth_data)
+    row_list.append(net_income_growth_data)
+
+    for row in row_list:
+        myTable.add_row(row)
+        myTable.add_row(['', '', '', '', ''])
+
+    return myTable

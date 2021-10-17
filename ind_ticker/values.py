@@ -13,3 +13,5 @@ TICKERTAPE_STOCK_ANNUAL_ANALYSIS_DATA_URL = 'https://api.tickertape.in/stocks/fi
 TICKERTAPE_STOCK_ANNUAL_ANALYSIS_NORMAL_DATA_URL = 'https://api.tickertape.in/stocks/financials/income/%s/annual/normal?count=10'
 
 TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL = 'https://api.tickertape.in/stocks/financials/balancesheet/%s/annual/normal?count=10'
+
+TICKERTAPE_STOCK_QUARTER_ANALYSIS_DATA_URL = 'https://api.tickertape.in/stocks/financials/income/%s/interim/growth?count=10'
