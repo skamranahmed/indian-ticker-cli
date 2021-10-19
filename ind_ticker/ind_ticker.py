@@ -8,6 +8,9 @@ from ind_ticker.stocks import (
     get_annual_growth_stock_data,
     get_quarterly_growth_stock_data
 )
+from ind_ticker.mutual_funds import (
+    get_mutual_fund_data
+)
 
 version = "0.0.4"
 
@@ -80,6 +83,24 @@ def stocks(stock_names):
     stock_names = list(stock_names)
     print(f"Getting stock data of {stock_names}!")
     get_stock_data_table_for_list_of_stocks(stock_names)
+    return
+
+#  get mutual fund data
+@main.command()
+@click.argument("mutual_fund_name", nargs = 1)
+def mf(mutual_fund_name):
+    """
+    Usage: ind-ticker stock <stock_name_without_spaces>
+    Example: ind-ticker stock State-Bank-Of-India
+    """
+    print(f"Getting mutual fund data of {mutual_fund_name}!")
+    mf_data_table = get_mutual_fund_data(mutual_fund_name)
+    if mf_data_table is None:
+        # if no data is found for the given mutual fund, then no need to perform any other operations
+        return
+    else:
+        print(mf_data_table)
+
     return
 
 if __name__ == "__main__":
