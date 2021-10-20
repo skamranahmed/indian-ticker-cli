@@ -27,28 +27,9 @@ def get_mutual_fund_data(mf_name):
         mf_data = json_data["data"]["items"][0]
         mf_name = mf_data["name"]
         mf_id = mf_data["id"]
-        mf_quote = mf_data["quote"]
-        mf_nav_close = round(mf_quote["navClose"], 2)
-        mf_nav_change_1d = round(mf_quote["navCh1d"],2)
-
-        if mf_nav_change_1d < 0:
-            mf_nav_change_1d = colored(mf_nav_change_1d, 'red')
-        else:
-            mf_nav_change_1d = colored(mf_nav_change_1d, 'green')
 
         full_mf_name = click.style(mf_name, fg = 'red', bold = True)
         print(f"{full_mf_name}".center(170))
-
-        # mutual_fund_name = colored("Mutual Fund Name", 'cyan')
-        # nav = colored("Nav (INR)", 'cyan')
-        # one_day_change = colored("1 Day change (%)", 'cyan')
-
-        # myTable = PrettyTable(
-        #     [mutual_fund_name, one_day_change, nav])
-
-        # row_data = [colored(mf_name, 'yellow'), mf_nav_change_1d, colored(mf_nav_close, 'blue')]
-        # myTable.add_row(row_data)
-        # myTable.add_row(['', '', ''])
 
         row_list = []
         duration_header = colored("Duration", 'cyan')
@@ -78,17 +59,26 @@ def get_mutual_fund_data(mf_name):
         return None
 
 def get_mutual_fund_data_by_duration(mf_id, duration):
-
-    # Duration, Current NAV, High, Low, Absolute Returns, CAGR
     response = s.get(TICKERTAPE_MUTUAL_FUND_SERIES_DATA_SEARCH_URL % (mf_id, duration), headers = {"accept-version": "6.9.2"})
     json_data = response.json()
 
     mf_data = json_data["data"][0]
-    high = mf_data["h"]
-    low = mf_data["l"]
-    abosulute_returns = mf_data["r"]
-    current_nav = mf_data["points"][-1]["lp"]
-    carg_returns = "-"
+    high = round(mf_data["h"], 2)
+    low = round(mf_data["l"], 2)
+    abosulute_returns = round(mf_data["r"], 2)
+    current_nav = colored(round(mf_data["points"][-1]["lp"],2), "yellow")
+    cagr_returns = mf_data.get("cagr", "-")
+
+    if cagr_returns != "-":
+        if cagr_returns < 0:
+            cagr_returns = colored(round(cagr_returns, 2), 'red')
+        else:
+            cagr_returns = colored(round(cagr_returns, 2), 'green')
+
+    if abosulute_returns < 0:
+        abosulute_returns = colored(abosulute_returns, 'red')
+    else:
+        abosulute_returns = colored(abosulute_returns, 'green')
 
     if duration == "1mo":
         investment_duration = colored("1 Month", "white")
@@ -105,6 +95,5 @@ def get_mutual_fund_data_by_duration(mf_id, duration):
     elif duration == "5y":
         investment_duration = colored("5 Years", "white")
 
-    row_data = [investment_duration, current_nav, high, low, abosulute_returns, carg_returns]
-
+    row_data = [investment_duration, current_nav, high, low, abosulute_returns, cagr_returns]
     return row_data
