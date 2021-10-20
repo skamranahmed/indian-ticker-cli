@@ -17,3 +17,5 @@ TICKERTAPE_STOCK_ANNUAL_ANALYSIS_BALANCESHEET_DATA_URL = 'https://api.tickertape
 TICKERTAPE_STOCK_QUARTER_ANALYSIS_DATA_URL = 'https://api.tickertape.in/stocks/financials/income/%s/interim/growth?count=10'
 
 TICKERTAPE_MUTUTAL_FUND_SEARCH_URL = 'https://api.tickertape.in/search?text=%s&types=mutualfund'
+
+TICKERTAPE_MUTUAL_FUND_SERIES_DATA_SEARCH_URL = 'https://api.tickertape.in/mutualfunds/%s/charts/inter?duration=%s'
