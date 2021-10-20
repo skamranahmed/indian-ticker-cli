@@ -12,6 +12,7 @@ from termcolor import colored
 s = requests.Session()
 
 def get_mutual_fund_data(mf_name):
+    # this is for getting the mutual fund id by using the mutual fund name
     response = s.get(TICKERTAPE_MUTUTAL_FUND_SEARCH_URL % (mf_name), headers = {"accept-version": "6.9.2"})
     json_data = response.json()
 
@@ -21,6 +22,8 @@ def get_mutual_fund_data(mf_name):
         total_mfs_found = 0
 
     if total_mfs_found == 0:
+        mutual_fund_name = colored(mf_name, 'red')
+        print(f"No data found for mutual fund '{mutual_fund_name}'")
         return None
 
     try:
@@ -42,12 +45,17 @@ def get_mutual_fund_data(mf_name):
         myTable = PrettyTable(
             [duration_header, current_nav_header, high_header, low_header, percentage_abs_return_header, percentage_cagr_return_header])
 
-
         duration_list = ["1mo", "6mo", "1y", "3y", "5y"]
         for duration in duration_list:
             row_data = get_mutual_fund_data_by_duration(mf_id = mf_id, duration = duration)
+            if row_data is None:
+                continue
             row_list.append(row_data)
-
+        
+        if len(row_list) == 0:
+            mutual_fund_name = colored(mf_name, 'red')
+            print(f"No data found for mutual fund '{mutual_fund_name}'")
+            return None
 
         for row in row_list:
             myTable.add_row(row)
@@ -55,45 +63,47 @@ def get_mutual_fund_data(mf_name):
 
         return myTable
     except:
-        print("I am here")
         return None
 
 def get_mutual_fund_data_by_duration(mf_id, duration):
     response = s.get(TICKERTAPE_MUTUAL_FUND_SERIES_DATA_SEARCH_URL % (mf_id, duration), headers = {"accept-version": "6.9.2"})
     json_data = response.json()
 
-    mf_data = json_data["data"][0]
-    high = round(mf_data["h"], 2)
-    low = round(mf_data["l"], 2)
-    abosulute_returns = round(mf_data["r"], 2)
-    current_nav = colored(round(mf_data["points"][-1]["lp"],2), "yellow")
-    cagr_returns = mf_data.get("cagr", "-")
+    try:
+        mf_data = json_data["data"][0]
+        high = round(mf_data["h"], 2)
+        low = round(mf_data["l"], 2)
+        abosulute_returns = round(mf_data["r"], 2)
+        current_nav = colored(round(mf_data["points"][-1]["lp"],2), "yellow")
+        cagr_returns = mf_data.get("cagr", "-")
 
-    if cagr_returns != "-":
-        if cagr_returns < 0:
-            cagr_returns = colored(round(cagr_returns, 2), 'red')
+        if cagr_returns != "-":
+            if cagr_returns < 0:
+                cagr_returns = colored(round(cagr_returns, 2), 'red')
+            else:
+                cagr_returns = colored(round(cagr_returns, 2), 'green')
+
+        if abosulute_returns < 0:
+            abosulute_returns = colored(abosulute_returns, 'red')
         else:
-            cagr_returns = colored(round(cagr_returns, 2), 'green')
+            abosulute_returns = colored(abosulute_returns, 'green')
 
-    if abosulute_returns < 0:
-        abosulute_returns = colored(abosulute_returns, 'red')
-    else:
-        abosulute_returns = colored(abosulute_returns, 'green')
+        if duration == "1mo":
+            investment_duration = colored("1 Month", "white")
 
-    if duration == "1mo":
-        investment_duration = colored("1 Month", "white")
+        elif duration == "6mo":
+            investment_duration = colored("6 Month", "white")
 
-    elif duration == "6mo":
-        investment_duration = colored("6 Month", "white")
+        elif duration == "1y":
+            investment_duration = colored("1 Year", "white")
 
-    elif duration == "1y":
-        investment_duration = colored("1 Year", "white")
+        elif duration == "3y":
+            investment_duration = colored("3 Years", "white")
 
-    elif duration == "3y":
-        investment_duration = colored("3 Years", "white")
+        elif duration == "5y":
+            investment_duration = colored("5 Years", "white")
 
-    elif duration == "5y":
-        investment_duration = colored("5 Years", "white")
-
-    row_data = [investment_duration, current_nav, high, low, abosulute_returns, cagr_returns]
-    return row_data
+        row_data = [investment_duration, current_nav, high, low, abosulute_returns, cagr_returns]
+        return row_data
+    except:
+        return None
