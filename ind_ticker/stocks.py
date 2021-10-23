@@ -303,7 +303,7 @@ def get_quarterly_growth_stock_data(stock_name):
     total_revenue_growth_data = [colored("Total Revenue Growth (%)", "yellow")]
     net_income_growth_data = [colored("Net Income Growth (%)", "yellow")]
     eps_growth_data = [colored("EPS Growth (%)", "yellow")]
-    quarter_name = []
+    quarter_name_list = []
 
     for quarter_data in last_four_quarters_data:
         total_revenue = round(quarter_data["qIncTrev"], 2)
@@ -329,25 +329,26 @@ def get_quarterly_growth_stock_data(stock_name):
         total_revenue_growth_data.append(total_revenue)
         net_income_growth_data.append(net_income)
         eps_growth_data.append(eps)
-        quarter_name.append(quarter_period)
+        quarter_name_list.append(quarter_period)
 
-    # TODO: make the quarter name fetching to be dynamic
-    row_list = []
     quarter_header = colored("Quarter", 'cyan')
-    q_name_1 = colored(quarter_name[0], 'cyan')
-    q_name_2 = colored(quarter_name[1], 'cyan')
-    q_name_3 = colored(quarter_name[2], 'cyan')
-    q_name_4 = colored(quarter_name[3], 'cyan')
-    myTable = PrettyTable(
-        [quarter_header, q_name_1, q_name_2, q_name_3, q_name_4])
+    quarter_table_header = [quarter_header]
+    row_list = []
 
+    for name in quarter_name_list:
+        q_name = colored(name, 'cyan')
+        quarter_table_header.append(q_name)
+
+    myTable = PrettyTable(quarter_table_header)
     row_list.append(total_revenue_growth_data)
     row_list.append(net_income_growth_data)
     row_list.append(eps_growth_data)
 
+    empty_row = [''] * len(quarter_table_header)
+
     for row in row_list:
         myTable.add_row(row)
-        myTable.add_row(['', '', '', '', ''])
+        myTable.add_row(empty_row)
 
     return myTable
 
