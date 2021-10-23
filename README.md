@@ -2,7 +2,6 @@
 
 CLI Tool for getting data of Indian Stocks and Mutual Funds
 
-
 #### To get Nifty-50 data:
 ```bash
   ind-ticker nifty-50
@@ -53,7 +52,7 @@ Example:
   ind-ticker stock Adani-Green -aa -qa
 ```
 
-### To get data of a Mutual Fund Scheme:
+#### To get data of a Mutual Fund Scheme:
 ```bash
   ind-ticker mf <mutual_fund_scheme_name>
 ```
