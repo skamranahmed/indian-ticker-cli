@@ -19,7 +19,7 @@ s = requests.Session()
 
 def get_stock_data_for_duration_of_one_day(stock_name):
     duration = colored("1 Day", 'white')
-    response = s.get(TICKERTAPE_STOCK_SEARCH_URL % (stock_name))
+    response = s.get(TICKERTAPE_STOCK_SEARCH_URL % (stock_name), headers = {"accept-version": "6.9.2"})
     json_data = response.json()
 
     try:
@@ -31,7 +31,7 @@ def get_stock_data_for_duration_of_one_day(stock_name):
         return None, None, None, None
 
     try:
-        stock_data = json_data["data"]["stocks"][0]
+        stock_data = json_data["data"]["items"][0]
         full_stock_name = stock_data["name"]
         sector = stock_data["sector"]
         stock_quote = stock_data["quote"]
@@ -331,6 +331,7 @@ def get_quarterly_growth_stock_data(stock_name):
         eps_growth_data.append(eps)
         quarter_name.append(quarter_period)
 
+    # TODO: make the quarter name fetching to be dynamic
     row_list = []
     quarter_header = colored("Quarter", 'cyan')
     q_name_1 = colored(quarter_name[0], 'cyan')
