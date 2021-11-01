@@ -8,10 +8,7 @@ from ind_ticker.stocks import (
     get_annual_growth_stock_data,
     get_quarterly_growth_stock_data
 )
-from ind_ticker.mutual_funds import (
-    get_mutual_fund_data,
-    get_mutual_fund_data_by_duration
-)
+from ind_ticker.mutual_funds import get_mutual_fund_data
 
 version = "0.0.4"
 
@@ -94,11 +91,6 @@ def mf(mutual_fund_name):
     Usage: ind-ticker stock <stock_name_without_spaces>
     Example: ind-ticker stock State-Bank-Of-India
     """
-    # get_mutual_fund_data_by_duration("M_TADL", "1mo")
-    # get_mutual_fund_data_by_duration("M_TADL", "6mo")
-    # get_mutual_fund_data_by_duration("M_TADL", "1y")
-    # get_mutual_fund_data_by_duration("M_TADL", "3y")
-    # get_mutual_fund_data_by_duration("M_TADL", "5y")
     print(f"Getting mutual fund data of {mutual_fund_name}!")
     mf_data_table = get_mutual_fund_data(mutual_fund_name)
     if mf_data_table is None:
