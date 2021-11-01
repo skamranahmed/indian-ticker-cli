@@ -4,11 +4,11 @@ CLI Tool for getting data of Indian Stocks and Mutual Funds
 
 #### To get Nifty-50 data:
 
-  ```bash
-    ind-ticker nifty-50
-  ```
+```bash
+  ind-ticker nifty-50
+```
 
-  ![](./.assets/nifty-50.gif)
+![](./.assets/nifty-50.mp4)
 
 #### To get the stock data of a single company:
 
