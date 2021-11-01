@@ -22,6 +22,8 @@ Example:
   ind-ticker stock Reliance
 ```
 
+![](./.assets/single-stock-data.gif)
+
 #### To get the stock data of multiple companies:
 
 ```bash
