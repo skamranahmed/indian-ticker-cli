@@ -1,6 +1,14 @@
-# Indian Ticker
+# 🔥 Indian Ticker
 
-CLI Tool for getting data of Indian Stocks and Mutual Funds
+👨‍💻 CLI Tool for getting data of Indian Stocks and Mutual Funds 📈
+
+## Installation
+
+Make sure that you are running Python 3.7 or later
+
+```bash
+pip install termcolor ind-ticker
+```
 
 #### To get Nifty-50 data:
 
