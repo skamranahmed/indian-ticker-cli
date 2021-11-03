@@ -36,6 +36,8 @@ Example:
   ind-ticker stocks Biocon Cipla
 ```
 
+![](./.assets/multiple-stocks-data.gif)
+
 #### To get the stock data of a company including the annual analysis:
 
 ```bash
@@ -47,6 +49,8 @@ Example:
 ```bash
   ind-ticker stock Avanti-Feeds -aa
 ```
+
+![](./.assets/annual-analysis.gif)
 
 #### To get the stock data of a company including the quarterly analysis:
 
@@ -60,6 +64,8 @@ Example:
   ind-ticker stock Titan -qa
 ```
 
+![](./.assets/quarterly-analysis.gif)
+
 #### To get the stock data of a company including both the analysis:
 
 ```bash
@@ -72,6 +78,8 @@ Example:
   ind-ticker stock Adani-Green -aa -qa
 ```
 
+![](./.assets/both-analysis.gif)
+
 #### To get data of a Mutual Fund Scheme:
 
 ```bash
@@ -83,3 +91,5 @@ Example:
 ```bash
   ind-ticker mf mirae-asset-tax-saver
 ```
+
+![](./.assets/mutual-fund.gif)
